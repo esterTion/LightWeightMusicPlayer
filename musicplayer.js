@@ -53,7 +53,7 @@ MusicPlayer=function(config){
 			'#'+this.config.id+' .warpper{background:'+this.config.color.blank+';position:absolute;left:'+this.config.borderWidth+';right:'+this.config.borderWidth+';top:'+this.config.borderWidth+';bottom:'+this.config.borderWidth+'}'+
 			'#'+this.config.id+' .buffered{position:absolute;height:100%;background:'+this.config.color.buffered+'}'+
 			'#'+this.config.id+' .played{position:absolute;height:100%;background:'+this.config.color.played+'}'+
-			'#'+this.config.id+' .icon{position:absolute;height:18px;left:50%;right:50%;opacity:0.5}'+
+			'#'+this.config.id+' .icon{height:18px;width:18px;margin:0 auto;opacity:0.5}'+
 		'</style>'+
 		'<audio src="'+this.config.src+'"></audio></div>';
 	this.container=document.getElementById(this.config.id);
