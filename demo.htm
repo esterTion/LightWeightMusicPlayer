@@ -1,0 +1,28 @@
+<!DOCTYPE HTML><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><title>A Quick Demo</title></head><body id="container" style="position:relative">
+<style>
+	html,body{background:#666;overflow:hidden}
+</style>
+<div id="music_container"></div>
+<script src="musicplayer.min.js"></script>
+<script>
+window.player=new MusicPlayer({
+	element:document.getElementById('music_container'),
+	src:'https://estertion.win/DREAMCATCHER.m4a',
+	id:'LightWeightPlayer',
+	borderWidth:'1px',
+	autoPlay:true,
+	loop:true,
+	/*color:{
+		'played':'#E05959',
+		'buffered':'#FFA7A7',
+		'blank':'#EEE',
+		'border':'#DDD'
+	}*/
+	color:{
+		played:'rgba('+[Math.round(Math.random()*255),Math.round(Math.random()*255),Math.round(Math.random()*255),Math.random()/2+.5].join(',')+')',
+		buffered:'rgba('+[Math.round(Math.random()*255),Math.round(Math.random()*255),Math.round(Math.random()*255),Math.random()/2+.5].join(',')+')',
+		blank:'rgba('+[Math.round(Math.random()*255),Math.round(Math.random()*255),Math.round(Math.random()*255),Math.random()/2+.5].join(',')+')',
+		border:'rgba('+[Math.round(Math.random()*255),Math.round(Math.random()*255),Math.round(Math.random()*255),Math.random()/2+.5].join(',')+')'
+	}
+})
+</script></body>
