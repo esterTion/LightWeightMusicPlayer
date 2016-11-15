@@ -154,13 +154,13 @@ MusicPlayer=function(config){
 		touchstart:function(e){
 			self.dragging=!0;
 			var bounding=self.barPlay.getBoundingClientRect();
-			self.oldTouch=[e.touches[0].pageX-bounding.left,e.touches[0].pageY-bounding.top];
+			self.oldTouch=[e.touches[0].clientX-bounding.left,e.touches[0].clientY-bounding.top];
 			self.barPlay.style.transitionDuration='0s';
 		},
 		touchmove:function(e){
 			var bounding=self.barPlay.getBoundingClientRect(),
 			containerBounding=this.getBoundingClientRect(),
-			pos=[e.changedTouches[0].pageX-bounding.left,e.changedTouches[0].pageY-bounding.top];
+			pos=[e.changedTouches[0].clientX-bounding.left,e.changedTouches[0].clientY-bounding.top];
 			//Vertical scrolling, ignore
 			if(pos[0]==self.oldTouch[0] && !self.dragged){
 				return;
