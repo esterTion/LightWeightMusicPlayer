@@ -6,6 +6,11 @@
   		played：已播放部分
   		buffered：已缓冲部分
   		blank：未缓冲部分
+  		border：边框
+  	id：容器id
+  	borderWidth：边框宽度
+  	autoPlay：自动播放
+  	loop：循环
  *
  */
 MusicPlayer=function(config){
@@ -45,14 +50,16 @@ MusicPlayer=function(config){
 			this.config[k1][k2]=this.config[k1][k2]||defaultConfig[k1][k2];
 		}
 	}
-	div.id=this.config.id
+	div.id=this.config.id;
+	if(typeof(this.config.borderWidth)!='string')
+		this.config.borderWidth=this.config.borderWidth+'px';
 	this.element.appendChild(div);
-	div.innerHTML='<div class="warpper"><div class="buffered"></div><div class="played"></div><div class="icon"></div>'+
+	div.innerHTML='<div class="warpper"><div class="buffered"></div><div class="played"></div><div class="icon">'+this.resource.play+'</div>'+
 		'<style>'+
-			'#'+this.config.id+'{height:20px;width:100%;position:relative;background:'+this.config.color.border+';cursor:pointer}'+
+			'#'+this.config.id+'{height:20px;width:100%;position:relative;background:'+this.config.color.border+';cursor:pointer;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}'+
 			'#'+this.config.id+' .warpper{background:'+this.config.color.blank+';position:absolute;left:'+this.config.borderWidth+';right:'+this.config.borderWidth+';top:'+this.config.borderWidth+';bottom:'+this.config.borderWidth+'}'+
-			'#'+this.config.id+' .buffered{position:absolute;height:100%;background:'+this.config.color.buffered+'}'+
-			'#'+this.config.id+' .played{position:absolute;height:100%;background:'+this.config.color.played+'}'+
+			'#'+this.config.id+' .buffered{position:absolute;height:100%;background:'+this.config.color.buffered+';transition:width .5s}'+
+			'#'+this.config.id+' .played{position:absolute;height:100%;background:'+this.config.color.played+';transition:width .5s}'+
 			'#'+this.config.id+' .icon{height:18px;width:18px;margin:0 auto;opacity:0.5}'+
 		'</style>'+
 		'<audio src="'+this.config.src+'"></audio></div>';
@@ -62,9 +69,15 @@ MusicPlayer=function(config){
 	this.audio=document.querySelector('#'+this.config.id+' audio');
 	this.svgIcon=document.querySelector('#'+this.config.id+' .icon');
 	var self=this;
+	this.updateTime=function(p){
+		this.barPlay.style.width=p+'%';
+	}
+	this.dragging=!1;
+	this.dragged=!1;
 	this.listeners={
 		timeupdate:function(e){
-			self.barPlay.style.width=(this.currentTime/this.duration*100)+'%';
+			if(!self.dragging)
+				self.updateTime(this.currentTime/this.duration*100);
 			try{
 				var s,e,i=0;
 				for(;i<this.buffered.length;i++){
@@ -99,6 +112,10 @@ MusicPlayer=function(config){
 			}
 		},
 		click:function(e){
+			if(self.dragged){
+				self.dragged=!1;
+				return;
+			}
 			if(self.audio.paused){
 				self.audio.play();
 			}else{
@@ -110,6 +127,70 @@ MusicPlayer=function(config){
 		},
 		pause:function(e){
 			self.svgIcon.innerHTML=self.resource.play;
+		},
+		mousedown:function(e){
+			self.dragging=!0;
+			self.barPlay.style.transitionDuration='0s';
+		},
+		mousemove:function(e){
+			if(self.dragging){
+				self.dragged=!0;
+				var border=parseInt(self.config.borderWidth);
+				if(isNaN(border))
+					border=0;
+				var p=(e.layerX-border)/(self.container.offsetWidth-2*border)*100;
+				p=(p>100)?100:p;
+				self.updateTime(p);
+			}
+		},
+		mouseup:function(e){
+			self.dragging=!1;
+			self.barPlay.style.transitionDuration='';
+			if(self.dragged){
+				self.audio.currentTime=parseFloat(self.barPlay.style.width)*self.audio.duration/100;
+				self.dragged=!1;
+			}
+		},
+		touchstart:function(e){
+			self.dragging=!0;
+			var bounding=self.barPlay.getBoundingClientRect();
+			self.oldTouch=[e.touches[0].pageX-bounding.left,e.touches[0].pageY-bounding.top];
+			self.barPlay.style.transitionDuration='0s';
+		},
+		touchmove:function(e){
+			var bounding=self.barPlay.getBoundingClientRect(),
+			containerBounding=this.getBoundingClientRect(),
+			pos=[e.changedTouches[0].pageX-bounding.left,e.changedTouches[0].pageY-bounding.top];
+			//Vertical scrolling, ignore
+			if(pos[0]==self.oldTouch[0] && !self.dragged){
+				return;
+			}
+			//If touch moves out of container, stop tracking
+			if( pos[0]>=0 && pos[1] >=0 && pos[0] <= containerBounding.width && pos[1] <=containerBounding.height ){
+				self.barPlay.style.transitionDuration='0s';
+				self.dragging=!0;
+			}else{
+				self.barPlay.style.transitionDuration='';
+				self.dragging=!1;
+				return;
+			}
+			e.preventDefault();
+			self.dragged=!0;
+			var border=parseInt(self.config.borderWidth);
+			if(isNaN(border))
+				border=0;
+			var p=(pos[0])/(self.container.offsetWidth-2*border)*100;
+			p=(p>100)?100:((p<0)?0:p);
+			self.updateTime(p);
+		},
+		touchend:function(e){
+			if(self.dragging && self.dragged){
+				self.audio.currentTime=parseFloat(self.barPlay.style.width)*self.audio.duration/100;
+				self.dragged=!1;
+			}
+			self.dragging=!1;
+			delete self.oldTouch;
+			self.barPlay.style.transitionDuration='';
 		}
 	}
 	this.audio.addEventListener('timeupdate',this.listeners.timeupdate);
@@ -117,6 +198,12 @@ MusicPlayer=function(config){
 	this.audio.addEventListener('play',this.listeners.play);
 	this.audio.addEventListener('pause',this.listeners.pause);
 	this.container.addEventListener('click',this.listeners.click);
+	this.container.addEventListener('mousedown',this.listeners.mousedown);
+	this.container.addEventListener('mousemove',this.listeners.mousemove);
+	this.container.addEventListener('mouseup',this.listeners.mouseup);
+	this.container.addEventListener('touchstart',this.listeners.touchstart);
+	this.container.addEventListener('touchmove',this.listeners.touchmove);
+	this.container.addEventListener('touchend',this.listeners.touchend);
 	if(this.config.autoPlay){
 		this.listeners.click();
 	}
