@@ -39,19 +39,19 @@ window.MusicPlayer = function (config) {
 		autoPlay: false,
 		loop: false
 	},
-		div = document.createElement('div'), k1, k2;
+		div = document.createElement('div'), self = this;
 	/* 一级默认参数 */
 	['id', 'borderWidth', 'autoPlay', 'loop'].forEach(function (k1) {
-		this.config[k1] = this.config[k1] || defaultConfig[k1];
+		self.config[k1] = self.config[k1] || defaultConfig[k1];
 	});
 	/* 二级默认参数 */
 	['color'].forEach(function (k1) {
-		if (this.config[k1] == undefined) {
-			this.config[k1] = defaultConfig[k1];
+		if (self.config[k1] == undefined) {
+			self.config[k1] = defaultConfig[k1];
 			return;
 		}
-		for (k2 in defaultConfig[k1]) {
-			this.config[k1][k2] = this.config[k1][k2] || defaultConfig[k1][k2];
+		for (var k2 in defaultConfig[k1]) {
+			self.config[k1][k2] = self.config[k1][k2] || defaultConfig[k1][k2];
 		}
 	});
 	div.id = this.config.id;
@@ -72,7 +72,6 @@ window.MusicPlayer = function (config) {
 	this.barBuffer = document.querySelector('#' + this.config.id + ' .buffered');
 	this.audio = document.querySelector('#' + this.config.id + ' audio');
 	this.svgIcon = document.querySelector('#' + this.config.id + ' .icon');
-	var self = this;
 	this.updateTime = function (p) {
 		this.barPlay.style.width = p + '%';
 	};
