@@ -1,13 +1,19 @@
-<!DOCTYPE HTML><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><title>A Quick Demo</title></head><body id="container" style="position:relative">
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" name="viewport" content="width=device-width">
+<title>A Quick Demo</title>
 <style>
-	html,body{background:#666;overflow:hidden}
+html,body{background:#666;overflow:hidden}
 </style>
+</head>
+<body id="container" style="position:relative">
 <div id="music_container"></div>
 <script src="musicplayer.min.js"></script>
 <script>
 window.player=new MusicPlayer({
 	element:document.getElementById('music_container'),
-	src:'https://estertion.win/DREAMCATCHER.m4a',
+	src:'https://estertion.win/media/昏き星、遠い月.m4a',
 	id:'LightWeightPlayer',
 	borderWidth:'1px',
 	autoPlay:true,
@@ -25,4 +31,4 @@ window.player=new MusicPlayer({
 		border:'rgba('+[Math.round(Math.random()*255),Math.round(Math.random()*255),Math.round(Math.random()*255),Math.random()/2+.5].join(',')+')'
 	}
 })
-</script></body>
+	</script></body></html>
