@@ -1,4 +1,4 @@
-#Light Weight Music Player
+# Light Weight Music Player
 
 
 Author: esterTion
@@ -9,7 +9,7 @@ A quick demo can be found [here](https://estertion.github.io/LightWeightMusicPla
 
 ---
 
-##Parameter
+## Parameter
 
 MusicPlayer accepts an object with following properties as parameter
  * element: The element to attach (required)
@@ -22,7 +22,7 @@ MusicPlayer accepts an object with following properties as parameter
 
 ---
 
-###Default config
+### Default config
 This will be overwrote by config passed to the function
 
 ```Javascript
@@ -42,7 +42,7 @@ This will be overwrote by config passed to the function
 
 ---
 
-###Example config
+### Example config
 
 ```Javascript
 {
@@ -62,15 +62,15 @@ This will be overwrote by config passed to the function
 ```
 
 ---
-#中文
+# 中文
 
-##轻量级音乐播放器
+## 轻量级音乐播放器
 
 示例页面在[这里](https://estertion.github.io/LightWeightMusicPlayer/demo.htm)
 
 ---
 
-##参数
+## 参数
 
 MusicPlayer接收一个包含以下属性的对象为参数
  * element: 要附属到的元素 (必须)
